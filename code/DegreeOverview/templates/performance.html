@@ -1,0 +1,209 @@
+{% extends "base.html" %} {% load staticfiles %} {% block title %}Performance
+Page{% endblock %} {%block content %} {% block CustomCss %}
+<link
+  href="{% static 'plugins/apex/apexcharts.css' %}"
+  rel="stylesheet"
+  type="text/css"
+/>
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/forms/theme-checkbox-radio.css' %}">
+<link href="{% static 'assets/css/tables/table-basic.css' %}" rel="stylesheet" type="text/css" />
+<style>
+  .apexcharts-canvas {
+    margin: 0 auto;
+  }
+</style>
+{% endblock %}
+<!--  START CONTENT AREA -->
+<div id="content" class="main-content">
+  <div class="container">
+    <div class="container">
+      <div class="row layout-top-spacing">
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+              <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12 text-center">
+                  <h2>Performance</h2>
+                </div>
+              </div>
+            </div>
+            <div class="widget-content widget-content-area">
+              <form action="/visGrade/showPerformance/performance" method="POST">
+                {% csrf_token %}
+                <div class="row mb-4">
+                  <div class="col-6 offset-7">
+                    <div class="row ml-2">
+                      <label for="models">Model</label>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <select
+                          class="selectpicker form-control custom-select-sm"
+                          id="models"
+                          name="model"
+                        >
+                          <option value="bar_chart" {%  if model == 'bar_chart' %}selected{% endif %}>Bar Chart</option>
+                          <option value="pie_chart" {%  if model == 'pie_chart' %}selected{% endif %}>Pie Chart</option>
+                          <option value="line_chart" {%  if model == 'line_chart' %}selected{% endif %}>Line Chart</option>
+                        </select>
+                      </div>
+                      <div class="col">
+                        <button class="btn btn-primary mt-2" type="submit">
+                          Show
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <h5>Overview</h5>
+              <table class="table table-bordered table-hover mb-4">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        {% for method in assessmentMethods %}
+                          <th>{{ method }}</th>
+                        {% endfor %}
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ studentID }}</td>
+                        <td>{{ studentName }}</td>
+                        {% for mark in marks %}
+                        <td>{{ mark }}</td>
+                        {% endfor %}
+                        <td>{{ total_marks }}</td>
+                    </tr>
+                </tbody>
+              </table>
+              <h5>Assessment</h5>
+              <table class="table table-bordered table-hover mb-4">
+                <thead>
+                    <tr>
+                      {% for method in assessmentMethods %}
+                      <th>{{ method }}</th>
+                      {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      {% for p in percentages %}
+                        <td>Percentage: {{ p }}%</td>
+                      {% endfor %}
+                    </tr>
+                    <tr>
+                      {% for cilos in preCILOs %}
+                        <td>CILOs: {{ cilos }}</td>
+                      {% endfor %}
+                    </tr>
+                    <tr>
+                      {% for mark in marks %}
+                      <td>Mark: {{ mark }}</td>
+                      {% endfor %}
+                    </tr>
+                </tbody>
+              </table>
+              <h5>Outcomes</h5>
+              <table class="table table-bordered table-hover mb-4">
+                <thead>
+                    <tr>
+                      {% for ciloName in ciloNames %}
+                      <th>CILO{{ ciloName }}</th>
+                      {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      {% for data in totalPer %}
+                        <td>Total: {{data}}</td>
+                      {% endfor %}
+                    </tr>
+                    <tr>
+                      {% for data in outcomes %}
+                        <td>Obtain: {{data}}</td>
+                      {% endfor %}
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="row text-right">
+            <div class="col">
+              <a class="btn btn-danger" type="submit" href="/user/stuMain">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  END CONTENT AREA  -->
+{% endblock %} {% block CustomJS %}
+<script src="{% static 'assets/js/scrollspyNav.js' %}"></script>
+<script src="{% static 'plugins/apex/apexcharts.min.js' %}"></script>
+<!-- <script src="{% static 'plugins/apex/custom-apexcharts.js' %}"></script> -->
+<script>
+  var sColStacked = {
+    chart: {
+        height: 350,
+        type: 'bar',
+        stacked: true,
+        toolbar: {
+          show: false,
+        }
+    },
+    // colors: ['#4361ee', '#888ea8', '#e3e4eb', '#d3d3d3'],
+    responsive: [{
+        breakpoint: 480,
+        options: {
+            legend: {
+                position: 'bottom',
+                offsetX: -10,
+                offsetY: 0
+            }
+        }
+    }],
+    plotOptions: {
+        bar: {
+            horizontal: false,
+        },
+    },
+    series: [{
+        name: 'Student A',
+        data: [44, 55, 41, 67, 22, 43]
+    },{
+        name: 'Student B',
+        data: [13, 23, 20, 8, 13, 27]
+    },{
+        name: 'Student C',
+        data: [11, 17, 15, 15, 21, 14]
+    },{
+        name: 'Student D',
+        data: [21, 7, 25, 13, 22, 8]
+    }],
+    xaxis: {
+        type: 'datetime',
+        categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT', '01/05/2011 GMT', '01/06/2011 GMT'],
+    },
+    legend: {
+        position: 'right',
+        offsetY: 40
+    },
+    fill: {
+        opacity: 1
+    },
+}
+
+var chart = new ApexCharts(
+    document.querySelector("#s-col-stacked"),
+    sColStacked
+);
+
+chart.render();
+</script>
+{% endblock %}

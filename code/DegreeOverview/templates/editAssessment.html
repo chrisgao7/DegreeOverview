@@ -1,0 +1,128 @@
+{% extends "base.html" %} {% load staticfiles %} {% block title %}Edit
+Assessment Page{% endblock %} {%block content %}
+{% block CustomCss %}
+    <link href="{% static 'assets/css/apps/invoice-add.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/dropify/dropify.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/forms/theme-checkbox-radio.css' %}">
+    <link href="{% static 'plugins/flatpickr/flatpickr.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'plugins/flatpickr/custom-flatpickr.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+<!--  START CONTENT AREA -->
+<div id="content" class="main-content">
+  <div class="container">
+    <div class="container">
+      <div class="row layout-top-spacing">
+        <div class="col-lg-12 col-12 layout-spacing">
+        <form action="/course/editassessment/{{ CourseID }}/" method="Post" ENCTYPE="multipart/form-data">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+              <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12 text-center">
+                  <h2>Edit Assessment</h2>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 col-12 layout-spacing">
+              <div class="widget-content widget-content-area">
+                <div class="table-responsive">
+                  <table class="table table-bordered mb-4">
+                    <thead>
+                      <tr>
+                        <th>Method</th>
+                        <th>Percentage</th>
+                        <th>CILOs</th>
+                        {% if operation == 'CreateCourse' %}
+                        <th>Operation</th>
+                        {% endif %}
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for item1 in assessment %}
+                      <tr>
+                        <td>
+                          <input
+                            type="text"
+                            value="{{ item1.AssessmentID }}"
+                            name="assessmentid{{ forloop.counter }}"
+                            hidden
+                          />
+                          <input
+                            class="form-control text-left"
+                            placeholder="Platforms Description"
+                            name="method{{ forloop.counter }}"
+                            value="{{ item1.MethodName }}"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            class="form-control text-left"
+                            placeholder="Platforms Description"
+                            name="percentage{{ forloop.counter }}"
+                            value="{{ item1.Percentage }}"
+                          />
+                        </td>
+                        <td>
+<!--                          <input-->
+<!--                            class="form-control mb-4 text-left"-->
+<!--                            placeholder="Platforms Description"-->
+<!--                            name="cilos{{ forloop.counter }}"-->
+<!--                            value="{{ item.CILOIDs }}"-->
+<!--                          />-->
+                          <select
+                            class="selectpicker"
+                            name="cilos{{ forloop.counter }}"
+                            data-size="5"
+                            placeholder="Select cilos."
+                            multiple
+                          >
+                            {% for item2 in CILO %}
+                            {% if item2.CILOName in item1.CILOIDs %}
+                              <option  value="{{ item2.CILOName }}" selected>CILO{{ item2.CILOName }}</option>
+                            {% else %}
+                              <option  value="{{ item2.CILOName }}">CILO{{ item2.CILOName }}</option>
+                            {% endif %}
+                            {% endfor%}
+                          </select>
+                        </td>
+                        {% if operation == 'CreateCourse' %}
+                        <td>
+                          <a class="btn btn-primary" href="/course/deleteassessment/{{ item1.AssessmentID }}/{{ CourseID }}/">Delete</a>
+                        </td>
+                        {% endif %}
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="row">
+            <div class="col text-right">
+              <button class="btn btn-success" type="submit">Save</button>
+              {% if operation == 'CreateCourse' %}
+                <a class="btn btn-primary" href="/course/addassessment/{{ CourseID }}">Add</a>
+              {% endif %}
+              <a class="btn btn-danger" href="/course/turnfromeditassessment/{{ CourseID }}/">Back</a>
+            </div>
+          </div>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  END CONTENT AREA  -->
+{% endblock %}
+{% block CustomJS %}
+    <script src="{% static 'plugins/dropify/dropify.min.js' %}"></script>
+    <script src="{% static 'plugins/flatpickr/flatpickr.js' %}"></script>
+    <script src="{% static 'assets/js/apps/invoice-add.js' %}"></script>
+{% if messages %} {% for msg in messages %}
+<script>
+  alert("{{ msg.message }}");
+</script>
+{% endfor %} {% endif %}
+{% endblock %}

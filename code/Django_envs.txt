@@ -1,0 +1,11 @@
+envs:
+django 2.2.12
+python 3.7.10
+nvm 1.1.7
+bootstrap 4.6.0
+jQuery.js 3.6.0
+popper.js 1.16.1
+
+command:
+conda update -n base -c defaults conda
+conda create -n Jasmine python=3.7

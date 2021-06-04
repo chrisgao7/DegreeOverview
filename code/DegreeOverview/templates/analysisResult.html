@@ -1,0 +1,143 @@
+{% extends "base.html" %} {% load staticfiles %} {% block title %}Course
+Designer Main Page{% endblock %} {%block content %} {% block CustomCss %}
+<link
+  href="{% static 'plugins/apex/apexcharts.css' %}"
+  rel="stylesheet"
+  type="text/css"
+/>
+<style>
+  .apexcharts-canvas {
+    margin: 0 auto;
+  }
+</style>
+{% endblock %}
+<!--  START CONTENT AREA -->
+<div id="content" class="main-content">
+  <div class="container">
+    <div class="container">
+      <div class="row layout-top-spacing">
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+              <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12 text-center">
+                  <h2>Analysis Result</h2>
+                </div>
+              </div>
+            </div>
+            <div class="widget-content widget-content-area">
+              <form action="/visGrade/analysis/analysisResult" method="POST">
+                {% csrf_token %}
+                <div class="row text">
+                  <div class="col-sm-5 col-12">
+                    <div class="form-group ">
+                      <label>Compare</label>
+                      <select
+                        class="selectpicker form-control"
+                        data-live-search="true"
+                        title="Semester"
+                        name="compareSemester"
+                      >
+                        {% for year in years %}
+                        <option value="{{ year }}" {%  if compareSemester == "{{ compareSemester }}" %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-sm-7 col-12">
+                    <div class="form-group">
+                      <label for="models">Model</label>
+                      <select
+                          class="selectpicker form-control custom-select-sm"
+                          id="models"
+                          name="model"
+                      >
+                        <option value="bar_chart" {%  if model == 'bar_chart' %}selected{% endif %}>Bar Chart</option>
+                        <option value="pie_chart" {%  if model == 'pie_chart' %}selected{% endif %}>Pie Chart</option>
+                        <option value="line_chart" {%  if model == 'line_chart' %}selected{% endif %}>Line Chart</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row text-center">
+                  <div class="col">
+                    <button class="btn btn-primary mt-2" type="submit">
+                      Show
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <h5>Assessment</h5>
+              <table class="table table-bordered table-hover mb-4">
+                <thead>
+                    <tr>
+                      {% for method in assessmentMethods %}
+                      <th>{{ method }}</th>
+                      {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      {% for p in percentages %}
+                        <td>Percentage: {{ p }}%</td>
+                      {% endfor %}
+                    </tr>
+                    <tr>
+                      {% for cilos in preCILOs %}
+                        <td>CILOs: {{ cilos }}</td>
+                      {% endfor %}
+                    </tr>
+                    <tr>
+                      {% for mark in avgMarks %}
+                        <td>Average mark: {{ mark }}</td>
+                      {% endfor %}
+                    </tr>
+                </tbody>
+              </table>
+              <h5>Outcomes</h5>
+              <table class="table table-bordered table-hover mb-4">
+                <thead>
+                    <tr>
+                      {% for ciloName in ciloNames %}
+                      <th>CILO{{ ciloName }}</th>
+                      {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      {% for data in totalPer %}
+                        <td>Total: {{data}}</td>
+                      {% endfor %}
+                    </tr>
+                    <tr>
+                      {% for data in outcomes %}
+                        <td>Average: {{data}}</td>
+                      {% endfor %}
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="row text-right">
+            <div class="col">
+              <a class="btn btn-danger" type="submit" href="/visGrade/back">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  END CONTENT AREA  -->
+{% endblock %} {% block CustomJS %}
+<script src="{% static 'assets/js/scrollspyNav.js' %}"></script>
+<script src="{% static 'plugins/apex/apexcharts.min.js' %}"></script>
+<script src="{% static 'plugins/apex/custom-apexcharts.js' %}"></script>
+{% if messages %} {% for msg in messages %}
+<script>
+  alert("{{ msg.message }}");
+</script>
+{% endfor %} {% endif %}
+{% endblock %}

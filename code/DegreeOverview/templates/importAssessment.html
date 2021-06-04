@@ -1,0 +1,60 @@
+{% extends "base.html" %} {% load staticfiles %} {% block title %}Edit CILO
+Page{% endblock %} {%block content %}
+<!--  START CONTENT AREA -->
+<div id="content" class="main-content">
+  <div class="container">
+    <div class="container">
+      <div class="row layout-top-spacing">
+        <div class="col-lg-12 col-12 layout-spacing">
+            <div class="statbox widget box box-shadow">
+              <div class="widget-header">
+                <div class="row">
+                  <div class="col-xl-12 col-md-12 col-sm-12 col-12 text-center">
+                    <h2>Import Assessment</h2>
+                  </div>
+                </div>
+              </div>
+              <div class="widget-content widget-content-area">
+                <form action="/course/importAssessment/{{ CourseID }}/" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="form-group mb-4 text-center">
+                    <div class="text-center">
+                      <input
+                        type="file"
+                        class="form-control-file"
+                        id="exampleFormControlFile1"
+                        name="assessmentFile"
+                        accept=".xls,.xlsx"
+                      />
+                    </div>
+                  </div>
+                  <div class="text-center">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="row text-right">
+            <div class="col">
+              <a class="btn btn-danger" type="submit" href="/course/addciloassessment/{{ CourseID }}/">Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  END CONTENT AREA  -->
+{% endblock %}
+{% block CustomJS %}
+{% if messages %} {% for msg in messages %}
+<script>
+  alert("{{ msg.message }}");
+</script>
+{% endfor %} {% endif %}
+{% endblock %}
+

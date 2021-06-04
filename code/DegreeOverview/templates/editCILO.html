@@ -1,0 +1,123 @@
+{% extends "base.html" %} {% load staticfiles %} {% block title %}Edit CILO
+Page{% endblock %} {%block content %}
+<!--  START CONTENT AREA -->
+<div id="content" class="main-content">
+  <div class="container">
+    <div class="container">
+      <div class="row layout-top-spacing">
+      <div class="col-lg-12 col-12 layout-spacing">
+      <form action="/course/editcilo/{{ CourseID }}/" method="Post" ENCTYPE="multipart/form-data">
+        <div class="statbox widget box box-shadow">
+          <div class="widget-header">
+            <div class="row">
+              <div class="col-xl-12 col-md-12 col-sm-12 col-12 text-center">
+                <h2>Edit CILO</h2>
+              </div>
+            </div>
+          </div>
+          {% for item in model %}
+            <div class="info">
+              <div class="row">
+                <div class="col-md-11 mx-auto">
+                  <div class="platform-div">
+                    <div class="form-group">
+                      <label>Name</label>
+                      <input
+                        type="text"
+                        value="{{ item.CILOID }}"
+                        name="ciloid{{ forloop.counter }}"
+                        hidden
+                      />
+                      <input
+                        type="text"
+                        class="form-control mb-4"
+                        placeholder="Platforms Title"
+                        value="{{ item.CILOName }}"
+                        name="name{{ forloop.counter }}"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label>Description</label>
+                      <input
+                        class="form-control mb-4 text-left"
+                        placeholder="Platforms Description"
+                        rows="5"
+                        name="discription{{ forloop.counter }}"
+                        value="{{ item.Description }}"
+                      />
+                    </div>
+                    {% if operation == 'CreateCourse' %}
+                    <div class="form-group">
+                      <label>PreCILO</label>
+<!--                      <input-->
+<!--                        class="form-control mb-4 text-left"-->
+<!--                        placeholder="Platforms Description"-->
+<!--                        rows="5"-->
+<!--                        value="{{item.PreCILO}}"-->
+<!--                        readonly-->
+<!--                      />-->
+                      <select class="selectpicker form-control"
+                              name="precilo{{ forloop.counter }}"
+                              data-size="5"
+                              data-live-search="true"
+                              data-actions-box="true"
+                              data-live-search-placeholder="Search here!"
+                              data-none-Selected-Text="New Pre CILOs"
+                              value="{{item.PreCILO}}"
+                              multiple
+                      >
+                        {% for item1 in Course %}
+                          {% for item2 in CILO %}
+                            {% if item1.CourseID == item2.course_id %}
+                              {% if item1.CourseName in item.PreCILO %}
+                              {% if item1.Type in item.PreCILO %}
+                              {% if item2.CILOName in item.PreCILO %}
+                                <option  value="{{ item1.CourseName }}-{{ item1.Type }}-{{ item2.CILOName }}" selected>{{ item1.CourseName }}-{{ item1.Type }}-CILO{{ item2.CILOName }}</option>
+                              {% endif %}
+                              {% endif %}
+                              {% else %}
+                                <option  value="{{ item1.CourseName }}-{{ item1.Type }}-{{ item2.CILOName }}">{{ item1.CourseName }}-{{ item1.Type }}-CILO{{ item2.CILOName }}</option>
+                              {% endif %}
+                            {% endif %}
+                          {% endfor%}
+                        {% endfor%}
+                      </select>
+                    </div>
+                    {% endif %}
+                    {% if operation == 'CreateCourse' %}
+                    <div class="col-md-12 text-right mb-2">
+                      <a class="btn btn-primary" href="/course/deletecilo/{{ item.CILOID }}/{{ CourseID }}/">Delete</a>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="row text-right">
+            <div class="col">
+              <button class="btn btn-success" type="submit">Save</button>
+              {% if operation == 'CreateCourse' %}
+              <a class="btn btn-primary" href="/course/addcilo/{{ CourseID }}">Add</a>
+              {% endif %}
+              <a class="btn btn-danger" href="/course/turnfromeditcilo/{{ CourseID }}/">Back</a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!--  END CONTENT AREA  -->
+{% endblock %}
+{% block CustomJS %}
+{% if messages %} {% for msg in messages %}
+<script>
+  alert("{{ msg.message }}");
+</script>
+{% endfor %} {% endif %}
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "base.html" %} {% load staticfiles %} {% block title %}Edit
+Assessment Page{% endblock %} {%block content %}
+{% block CustomCss %}
+    <link href="{% static 'assets/css/apps/invoice-add.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'plugins/dropify/dropify.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/forms/theme-checkbox-radio.css' %}">
+    <link href="{% static 'plugins/flatpickr/flatpickr.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'plugins/flatpickr/custom-flatpickr.css' %}" rel="stylesheet" type="text/css">
+
+{% endblock %}
+<!--  START CONTENT AREA -->
+<div id="content" class="main-content">
+  <div class="container">
+    <div class="container">
+      <div class="row layout-top-spacing">
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-header">
+              <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12 text-center">
+                  <h2>Add Assessment</h2>
+                </div>
+              </div>
+            </div>
+            <form action="/course/addassessment/{{ CourseID }}/" method="Post" ENCTYPE="multipart/form-data">
+                <div class="widget-content widget-content-area">
+                  <div class="info">
+                    <div class="row">
+                      <div class="col-md-11 mx-auto">
+                        <div class="platform-div">
+                          <div class="form-group">
+                            <label>Method Name</label>
+                            <input
+                              type="text"
+                              class="form-control mb-4"
+                              id="Enter the cilo name"
+                              placeholder="Enter the method name"
+                              name="methodname"
+                              value="{{ name }}"
+                            />
+                          </div>
+                          <div class="form-group mb-4">
+                            <label>Percentage</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Enter the percentage"
+                              rows="3"
+                              name="percentage"
+                              value="{{ percentage }}"
+                            />
+                          </div>
+                          <div class="form-group">
+                            <label>CILOs</label>
+<!--                            <input-->
+<!--                              type="text"-->
+<!--                              class="form-control mb-4"-->
+<!--                              placeholder="Enter CILOs that assessment related to"-->
+<!--                              name="cilos"-->
+<!--                              value="{{ cilo }}"-->
+<!--                            />-->
+
+                            <select class="selectpicker form-control"
+                              name="cilos"
+                              data-size="5"
+                              data-none-Selected-Text="Please select related CILOs"
+                              multiple
+                            >
+                              {% for item in CILO %}
+                                <option  value="{{ item.CILOName }}">CILO{{ item.CILOName }}</option>
+                              {% endfor%}
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-12 text-right mb-2">
+                          <button class="btn btn-success" type="submit" value="save">Save</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+          </div>
+        </div>
+        <div class="col-lg-12 col-12 layout-spacing">
+          <div class="row">
+            <div class="col text-right">
+              <a class="btn btn-danger" href="/course/editassessment/{{ CourseID }}/">Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  END CONTENT AREA  -->
+{% endblock %}
+{% block CustomJS %}
+    <script src="{% static 'plugins/dropify/dropify.min.js' %}"></script>
+    <script src="{% static 'plugins/flatpickr/flatpickr.js' %}"></script>
+    <script src="{% static 'assets/js/apps/invoice-add.js' %}"></script>
+
+{% if messages %} {% for msg in messages %}
+<script>
+  alert("{{ msg.message }}");
+</script>
+{% endfor %} {% endif %}
+
+{% endblock %}
